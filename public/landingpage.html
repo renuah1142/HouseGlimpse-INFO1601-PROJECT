@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="MARKET PLACE APP to view listing of beautiful houses at your fingertips">
+  <meta name="author" content="Renuah Samuel, David Williams, and Keishanna Joseph">
+  <title>HouseGlimpse</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="canonical" href="/sign-in.css">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../apps/cover.css" rel="stylesheet">
+  <link href="../apps/pages.css" rel="stylesheet">
+  <style>
+    img {
+      border-radius: 45px;
+    }
+
+    .navbar-logo {
+      margin-left: 10px;
+    }
+
+    .carousel-inner {
+      width: 200%;
+      /* Increase the width of the carousel-inner */
+      margin-left: -50%;
+      /* Center the images */
+      overflow: hidden;
+    }
+
+    .carousel {
+      width: 100%;
+      max-width: 1500px;
+      /* Increase the maximum width */
+      margin: auto;
+      overflow: hidden;
+      position: relative;
+      /* Add position relative */
+    }
+
+    .carousel-item img {
+      width: auto;
+      /* Auto width */
+      height: 600px;
+      /* Increase the height of the images */
+      object-fit: cover;
+      /* Ensure the image covers the entire container */
+    }
+
+    .carousel-item.active {
+      transform: scale(0.9);
+      /* Adjust scale to your preference */
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+      width: auto;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+      background-color: rgba(0, 0, 0, 0.5);
+      /* Adjust as needed */
+    }
+
+    .carousel-caption {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.5);
+      /* Adjust as needed */
+      color: white;
+      width: 100%;
+      padding: 10px;
+    }
+
+    .masthead {
+      background-image: url('../img/keith-misner-h0Vxgz5tyXA-unsplash.jpg');
+      background-size: cover;
+      background-position: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+
+    ::-webkit-scrollbar {
+      display: none;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .sign {
+      background-image: url('../img/woodbg.png');
+      background-size: 100%;
+      color: gold;
+    }
+  </style>
+</head>
+
+<body class="masthead">
+  <nav class="navbar navbar-expand-lg py-3 bg-gainsboro">
+    <div class="container">
+      <div class="position-absolute top-0 start-50 translate-middle-x">
+        <a class="navbar-logo" href="/apps/landingpage.html"><img src="../img/houselogo.jpeg" alt="logoicon" width="60"
+            height="60"></a>
+        <a class="navbar-brand" href="/apps/landingpage.html">
+          <div class="logo">
+            <h1 style="background-color: rgb(92, 92, 92);" class="btn btn-warning btn-lg">HouseGlimpse</h1>
+          </div>
+        </a>
+      </div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="login-logo" href="/apps/login.html"><button type="button" class="btn btn-warning ">Log
+                In</button></a>
+          </li>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+          <li class="nav-item">
+            <a class="sing-up" href="/apps/signup.html"><button type="button" class="btn btn-dark">Sign
+                Up</button></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+
+      <!-- Added data-bs-interval -->
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <!-- Add indicators dynamically -->
+      </ol>
+
+      <!-- Slides -->
+      <div class="carousel-inner">
+        <!-- Slide items will be added dynamically -->
+      </div>
+
+      <!-- Controls -->
+      <a class="carousel-control-prev" href="#carouselExampleInterval" role="button" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#carouselExampleInterval" role="button" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </a>
+    </div>
+
+  </main>
+
+  <!-- Bootstrap JavaScript files -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- Your JavaScript code -->
+  <script>
+    document.addEventListener("DOMContentLoaded", async function () {
+      try {
+        // Fetch data from data.json file
+        const response = await fetch('data.json');
+        const data = await response.json();
+
+        // Call function to display house cards with purpose equal to 'superhot'
+        displayFilteredProps(data, 'superhot');
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    function displayFilteredProps(data, filter) {
+      const houseCardsContainer = document.querySelector('.carousel-inner');
+      const indicatorsContainer = document.querySelector('.carousel-indicators');
+
+      // Clear existing content
+      houseCardsContainer.innerHTML = '';
+      indicatorsContainer.innerHTML = '';
+
+      // Filter the data based on the filter criteria
+      const filteredData = data.hits.filter(house => house.product === filter);
+
+      // Loop through the filtered data and generate HTML for each house card
+      filteredData.forEach((house, index) => {
+        // Create HTML for house card
+        const isActive = index === 0 ? 'active' : '';
+        const cardHtml = `
+            <div class="carousel-item ${isActive}">
+                <img src="${house.coverPhoto.url}" class="d-block w-100" alt="House Image">
+                <div class="carousel-caption d-md-block">
+                    <h5>${house.title}</h5>
+                    <p>Details: ${house.rooms} Rooms | ${house.baths} Baths | ${house.area.toFixed(2)} Sqft</p>
+                </div>
+            </div>
+        `;
+
+        // Append the card HTML to the container
+        houseCardsContainer.innerHTML += cardHtml;
+
+        // Create indicator
+        const indicator = document.createElement('li');
+        indicator.setAttribute('data-bs-target', '#carouselExampleInterval');
+        indicator.setAttribute('data-bs-slide-to', index.toString());
+        if (index === 0) {
+          indicator.classList.add('active');
+        }
+
+        // Append indicator to container
+        indicatorsContainer.appendChild(indicator);
+      });
+    }
+
+
+  </script>
+  <!-- Bootstrap JavaScript files -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="MARKET PLACE APP to view listing of beautiful houses at your fingertips">
+    <meta name="author" content="Renuah Samuel, David Williams, and Keishanna Joseph">
+    <title>HouseGlimpse - Favorite Houses</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="canonical" href="/sign-in.css">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../apps/cover.css" rel="stylesheet">
+    <link href="../apps/pages.css" rel="stylesheet">
+
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 sidebar">
+                <div class="logo-wrapper">
+                    <a href="../apps/dashboard.html"><img src="../img/houselogo.jpeg" alt="logo"
+                            class="sidebar-logo"></a>
+                    <h1 class="sidebar-title"><a href="../apps/dashboard.html"
+                            style="color: white; text-decoration: none;">HouseGlimpse</a></h1>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link" href="../apps/dashboard.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../apps/profil.html">Profile</a></li>
+                    <li class="nav-item"><a class="link-warning" href="../apps/favpage.html">Favorites</a></li>
+                    <br>
+                    <li class="nav-item">Quick Filters</li>
+                    <!-- Filter labels -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="../apps/dashboard.html">All</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../apps/for-rent.html">For Rent</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../apps/for-sale.html">For Sale</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../apps/Apartments.html">Apartments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../apps/Villas.html">Villas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../apps/Penthouses.html">Pent-Houses</a>
+                    </li>
+                </ul>
+                <hr>
+                <ul class="nav flex-column mt-auto">
+                    <li class="nav-item"><a class="nav-link" href="../apps/landingpage.html">Log Out</a></li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 main-content">
+                <div class="row" id="favoriteHouses">
+                    <!-- House cards will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            try {
+                // Fetch data from data.json file
+                const response = await fetch('data.json');
+                const data = await response.json();
+
+                // Load favorites from localStorage
+                loadFavorites(data);
+
+                // Display favorite houses on the favorites page
+                displayFavoritesPage(data);
+            } catch (error) {
+                console.error(error);
+            }
+        });
+
+        // Array to store favorite house IDs
+        let favorites = [];
+
+        // Function to toggle favorite status and update UI
+        function toggleFavorite(externalID) {
+            const index = favorites.indexOf(externalID);
+            if (index === -1) {
+                // House is not in favorites, add it
+                favorites.push(externalID);
+            } else {
+                // House is already in favorites, remove it
+                favorites.splice(index, 1);
+            }
+            // Save favorites to localStorage
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            // Update UI
+            updateFavoritesUI();
+            // Reload favorites page
+            displayFavoritesPage();
+        }
+
+        // Function to update UI to reflect favorite status
+        function updateFavoritesUI() {
+            const favoriteButtons = document.querySelectorAll('.btn-love');
+            favoriteButtons.forEach(button => {
+                const externalID = button.dataset.externalid;
+                if (favorites.includes(externalID)) {
+                    button.classList.add('text-danger'); // Add filled heart color
+                } else {
+                    button.classList.remove('text-danger'); // Remove filled heart color
+                }
+            });
+        }
+
+        // Function to load favorites from localStorage
+        function loadFavorites(data) {
+            const storedFavorites = localStorage.getItem('favorites');
+            if (storedFavorites) {
+                favorites = JSON.parse(storedFavorites);
+                updateFavoritesUI();
+            }
+        }
+
+        // Function to display favorite houses on the favorites page
+        function displayFavoritesPage(data) {
+            const favoriteHousesContainer = document.getElementById('favoriteHouses');
+            favoriteHousesContainer.innerHTML = '';
+
+            // Filter the data to get favorite houses
+            const favoriteHouses = data.filter(house => favorites.includes(house.externalID));
+
+            // Display favorite houses
+            favoriteHouses.forEach(house => {
+                // Create HTML for house card
+                const cardHtml = `
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <img src="${house.coverPhoto.url}" class="card-img-top" alt="House Image">
+                            <div class="card-body">
+                                <h5 class="card-title">${house.title}</h5>
+                                <p class="card-text">
+                                    <div class="justify-content-between align-items-center"> <i class="fas fa-bed"></i>  ${house.rooms}  |   <i class="fas fa-bath"></i> ${house.baths}  | ${house.area.toFixed(2)} Sqft <i class="fas fa-home"></i> | <i class="fas fa-money-bill-wave"></i> USD ${house.price} ${house.rentFrequency ? house.rentFrequency : ''}  | <h6 class="badge rounded-pill text-bg-dark">${house.type}</h6><div>
+                                    <i class="fas fa-map-marker-alt"></i> ${house.location[0].name}, ${house.location[1].name} | Video: ${house.coverVideo ? 'Yes' : 'No'}
+                                </p>
+                            
+                                <div class="d-flex justify-content-between align-items-center"> <h6 class="badge text-bg-secondary text-bg-warning">${house.product}</h6>
+                                    <button class="btn btn-love"><i class="fas fa-heart"></i></button>
+                                    <div>
+                                        <a href="#" class="btn btn-primary btn-sm mb-3" onclick="showHouseDetails('${house.title}', '${house.coverPhoto.url}', '${house.rooms}', '${house.baths}', 
+                                        '${house.type}', '${house.price}', '${house.coverVideo ? house.coverVideo.url : ''}', '${house.location[0].name}', '${house.location[1].name}', '${house.contactName}', '${house.phoneNumber.mobile}', '${house.phoneNumber.phone}', '${house._geoloc.lat}',
+                                        '${house._geoloc.lng}', '${house.area.toFixed(2)}', '${house.agency.name}', '${house.agency.logo.url}', '${house.externalID}', '${house.photoCount}')">Show Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                // Append the card HTML to the container
+                favoriteHousesContainer.innerHTML += cardHtml;
+            });
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="MARKET PLACE APP to view listing of beautiful houses at your fingertips">
+    <meta name="author" content="Renuah Samuel, David Williams, and Keishanna Joseph">
+    <title>HouseGlimpse - Villas</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="canonical" href="/sign-in.css">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../apps/cover.css" rel="stylesheet">
+    <link href="../apps/pages.css" rel="stylesheet">
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 sidebar">
+                <div class="logo-wrapper">
+                    <a href="../apps/dashboard.html"><img src="../img/houselogo.jpeg" alt="logo"
+                            class="sidebar-logo"></a>
+                    <h1 class="sidebar-title"><a href="../apps/dashboard.html"
+                            style="color: white; text-decoration: none;">HouseGlimpse</a></h1>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link" href="../apps/dashboard.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../apps/favpage.html">Favorites</a></li>
+                    <br>
+                    <li class="nav-item">Quick Filters</li>
+                    <!-- Filter labels -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="../apps/dashboard.html">All</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../apps/for-rent.html">For Rent</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../apps/for-sale.html">For Sale</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../apps/Apartments.html">Apartments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="link-warning" href="../apps/Villas.html">Villas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../apps/Penthouses.html">Pent-Houses</a>
+                    </li>
+                </ul>
+                <hr>
+                <ul class="nav flex-column mt-auto">
+                    <li class="nav-item"><a class="nav-link" href="../apps/landingpage.html">Log Out</a></li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 main-content">
+                <div class="row d-flex justify-content-between align-items-center" id="houseCards">
+                    <!-- House cards will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="houseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img id="modalCoverPhoto" src="#" alt="House Image">
+                    <div class="modal-description">
+                        <h5 id="modalTitle" class="modal-title"></h5>
+                        <p id="modalDetails"></p>
+                    </div>
+                    <div class="modal-body">
+                        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                            <div id="carouselInner" class="carousel-inner">
+                                <!-- Carousel items will be dynamically added here -->
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button"
+                                data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button"
+                                data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", async function () {
+                try {
+                    // Fetch data from data.json file
+                    const response = await fetch('data.json');
+                    const data = await response.json();
+
+                    // Call function to display house cards with purpose equal to 'for rent'
+                    displayFilteredProps(data, '3');
+                } catch (error) {
+                    console.error(error);
+                }
+            });
+
+            function displayFilteredProps(data, filter) {
+                // Get the container for house cards
+                const houseCardsContainer = document.getElementById('houseCards');
+
+                // Clear existing content
+                houseCardsContainer.innerHTML = '';
+
+                // Filter the data based on the filter criteria
+                const filteredData = data.hits.filter(house => house.category[1].externalID === filter);
+
+                // Display the filtered house cards
+                filteredData.forEach(house => {
+                    // Create HTML for house card
+                    const cardHtml = `
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <img src="${house.coverPhoto.url}" class="card-img-top" alt="House Image">
+                            <div class="card-body">
+                                <h5 class="card-title">${house.title}</h5>
+                                <p class="card-text">
+                                    <div class="justify-content-between align-items-center"> <i class="fas fa-bed"></i>  ${house.rooms}  |   <i class="fas fa-bath"></i> ${house.baths}  | ${house.area.toFixed(2)} Sqft <i class="fas fa-home"></i> | <i class="fas fa-money-bill-wave"></i> USD ${house.price} ${house.rentFrequency ? house.rentFrequency : ''}  | <h6 class="badge rounded-pill text-bg-dark">${house.type}</h6><div>
+                                    <i class="fas fa-map-marker-alt"></i> ${house.location[0].name}, ${house.location[1].name} | Video: ${house.coverVideo ? 'Yes' : 'No'}
+                                </p>
+                            
+                                <div class="d-flex justify-content-between align-items-center"> <h6 class="badge text-bg-secondary text-bg-warning">${house.product}</h6>
+                                    <button class="btn btn-love"><i class="fas fa-heart"></i></button>
+                                    <div>
+                                        <a href="#" class="btn btn-primary btn-sm mb-3" onclick="showHouseDetails('${house.title}', '${house.coverPhoto.url}', '${house.rooms}', '${house.baths}', 
+                                        '${house.type}', '${house.price}', '${house.coverVideo ? house.coverVideo.url : ''}', '${house.location[0].name}', '${house.location[1].name}', '${house.contactName}', '${house.phoneNumber.mobile}', '${house.phoneNumber.phone}', '${house._geoloc.lat}',
+                                        '${house._geoloc.lng}', '${house.area.toFixed(2)}', '${house.agency.name}', '${house.agency.logo.url}', '${house.externalID}', '${house.photoCount}')">Show Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                    // Append the card HTML to the container
+                    houseCardsContainer.innerHTML += cardHtml;
+                });
+            }
+
+
+            function showHouseDetails(title, coverPhotoUrl, rooms, baths, type, price, coverVideoUrl, location1, location2, contactName, phoneNumber1, phoneNumber2, lat, lng, area, agencyName, agencyLogo, externalid, photoCount) {
+                // Set modal content    
+                document.getElementById('modalTitle').textContent = title;
+                document.getElementById('modalCoverPhoto').src = coverPhotoUrl;
+                document.getElementById('modalDetails').innerHTML = `<p><i class="fas fa-bed"></i> ${rooms} | <i class="fas fa-bath"></i> ${baths} | ${area} sqft <i class="fas fa-home"></i> | <i class="fas fa-money-bill-wave"></i> USD$${price} <i class="fas fa-map-marker-alt"></i> ${location1}, ${location2} </p>
+            <strong>Seller Contact Details:</strong><br>Contact Name: ${contactName}<br>Phone Number: <a href="tel:${phoneNumber2}">${phoneNumber2}</a><br>Mobile: <a href="tel:${phoneNumber1}">${phoneNumber1}</a><br>Agency Name: ${agencyName}<br> <img src="${agencyLogo}" class="img-fluid" alt="Agency Logo">
+            <br><div class="d-flex justify-content-between"><a id="GoogleMaps" href="https://www.google.com/maps?q=${lat},${lng}" class="btn btn-dark mt-4 "><i class="fas fa-map-marker-alt"></i> Google Maps</a><a id="ShowPhotos" onclick="fetchHousePhotos(${externalid})" href="#" class="btn btn-dark mt-4 "><i class="fas fa-photo-video"></i> Show More Photos</a>
+            ${coverVideoUrl ? `<a id="videoLink" href="${coverVideoUrl}" class="btn btn-dark mt-4">House Video Link</a></div>` : ''}`;
+                // Show modal
+                $('#houseModal').modal('show');
+            }
+
+
+            async function fetchHousePhotos(externalID) {
+                const url = `https://bayut.p.rapidapi.com/properties/detail?externalID=${externalID}`;
+                const options = {
+                    method: 'GET',
+                    headers: {
+                        'X-RapidAPI-Key': '52ebbaef52msh3f25e7cc55478d2p12612djsn299ea60b3a8c',
+                        'X-RapidAPI-Host': 'bayut.p.rapidapi.com'
+                    }
+                };
+
+                try {
+                    const response = await fetch(url, options);
+                    const result = await response.json();
+
+                    // Check if photos are available
+                    if (result.photos && result.photos.length > 0) {
+                        // Extract photo URLs
+                        const photoURLs = result.photos.map(photo => photo.url);
+
+                        // Display photos in a carousel
+                        displayPhotoCarousel(photoURLs);
+
+                        return photoURLs;
+                    } else {
+                        console.log('No photos found for the house.');
+                        return [];
+                    }
+                } catch (error) {
+                    console.error('Error fetching house photos:', error);
+                    return [];
+                }
+            }
+
+            function displayPhotoCarousel(photoURLs) {
+                // Get the carousel element
+                const carouselInner = document.getElementById('carouselInner');
+
+                // Clear existing carousel content
+                carouselInner.innerHTML = '';
+
+                // Create carousel items for each photo URL
+                photoURLs.forEach((url, index) => {
+                    const activeClass = index === 0 ? 'active' : ''; // Add active class to first item
+                    const carouselItem = `<div class="carousel-item ${activeClass}">
+                                    <img src="${url}" class="d-block w-100" alt="House Photo">
+                                    </div>`;
+                    carouselInner.innerHTML += carouselItem;
+                    console.log(carouselItem);
+                });
+                // Show the carousel
+                $('#photoCarousel').modal('show');
+            }
+        </script>
+        <!-- Bootstrap Bundle with Popper -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>

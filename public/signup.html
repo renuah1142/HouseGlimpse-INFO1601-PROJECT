@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content=" MARKET PLACE APP to view lising of beautiful houses at your fingertips">
+    <meta name="author" content="Renuah Samuel, David Williams and Keishanna Joseph">
+    <title>HouseGlimpse</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            overflow: hidden;
+        }
+
+        .masthead {
+            background-image: url('../img/keith-misner-h0Vxgz5tyXA-unsplash.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        .form-signup {
+            width: 30rem;
+            margin: auto;
+            color: rgb(0, 0, 0);
+            background-color: gainsboro;
+            border-radius: 1.5rem;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: box-shadow 0.3s;
+        }
+
+        .form-signup:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .text-center {
+            font-size: large;
+            border-radius: 50px;
+        }
+
+        .nav-item {
+            margin-right: 3rem;
+            margin-top: 0.5rem;
+
+        }
+
+        .logo {
+            border-radius: 50px;
+        }
+    </style>
+
+
+</head>
+
+<body class="masthead">
+
+    <div class="thingy">
+        <ul class="nav justify-content-end">
+            <li class="nav-item">
+                <a class="sing-up" href="/apps/landingpage.html"><button type="button" class="btn btn-warning">Home
+                    </button></a>
+            </li>
+            <li class="nav-item">
+                <a class="sing-up" href="../apps/login.html"><button type="button" class="btn btn-dark">Log In
+                    </button></a>
+            </li>
+        </ul>
+
+    </div>
+
+
+    <main class="form-signup">
+        <div class="text-center">
+            <img class="logo" src="../img/houselogo.jpeg" alt="" width="100" height="100">
+        </div>
+        <div class="text-center">
+            <h1>HouseGlimpse</h1>
+        </div>
+        <br>
+
+        <div class="text-center">
+            <h2>Create Account</h2>
+        </div>
+        <br>
+
+        <form>
+            <div id="Myform" class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputFirstName">First Name</label>
+                    <input type="text" class="form-control" id="inputFirstName" placeholder="Enter your first name"
+                        required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputLastName">Last Name</label>
+                    <input type="text" class="form-control" id="inputLastName" placeholder="Enter your last name"
+                        required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPhoneNumber">Phone Number</label>
+                <input type="tel" class="form-control" id="inputPhoneNumber" placeholder="Enter your phone number"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="inputDOB">Date of Birth</label>
+                <input type="date" class="form-control" id="inputDOB" required>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail">Email address</label>
+                <input type="email" class="form-control" id="inputEmail" placeholder="name@example.com" required>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword">Password</label>
+                <input type="password" class="form-control" id="inputPassword" placeholder="Password" minlength="8"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="inputConfirmPassword">Confirm Password</label>
+                <input type="password" class="form-control" id="inputConfirmPassword" placeholder="Confirm Password"
+                    minlength="8" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block mt-4">Submit</button>
+        </form>
+
+        <div class="text-center mt-3">
+            <p class="text-body-secondary">&copy; 2017–2024 HouseGlimpse</p>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
