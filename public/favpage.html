@@ -112,8 +112,6 @@
             localStorage.setItem('favorites', JSON.stringify(favorites));
             // Update UI
             updateFavoritesUI();
-            // Reload favorites page
-            displayFavoritesPage();
         }
 
         // Function to update UI to reflect favorite status
@@ -161,7 +159,7 @@
                                 </p>
                             
                                 <div class="d-flex justify-content-between align-items-center"> <h6 class="badge text-bg-secondary text-bg-warning">${house.product}</h6>
-                                    <button class="btn btn-love"><i class="fas fa-heart"></i></button>
+                                    <button class="btn btn-love" data-externalid="${house.externalID}" onclick="toggleFavorite('${house.externalID}')"><i class="fas fa-heart"></i></button>
                                     <div>
                                         <a href="#" class="btn btn-primary btn-sm mb-3" onclick="showHouseDetails('${house.title}', '${house.coverPhoto.url}', '${house.rooms}', '${house.baths}', 
                                         '${house.type}', '${house.price}', '${house.coverVideo ? house.coverVideo.url : ''}', '${house.location[0].name}', '${house.location[1].name}', '${house.contactName}', '${house.phoneNumber.mobile}', '${house.phoneNumber.phone}', '${house._geoloc.lat}',
@@ -176,6 +174,34 @@
                 favoriteHousesContainer.innerHTML += cardHtml;
             });
         }
+
+
+        // Initialize Firebase with your Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfh6nG1m77Qn8ROmvT1pvsqbT4EN-Cxm4",
+            authDomain: "houseglimpse.firebaseapp.com",
+            projectId: "houseglimpse",
+            storageBucket: "houseglimpse.appspot.com",
+            messagingSenderId: "270740415363",
+            appId: "1:270740415363:web:ba790aeedcc6c5218fccb6",
+            measurementId: "G-02W6V213L7"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        // Get a reference to the Firebase Auth service
+        const auth = firebase.auth();
+
+        // Logout button
+        const logoutBtn = document.getElementById('logoutBtn');
+        logoutBtn.addEventListener('click', () => {
+            // Sign out the current user
+            auth.signOut().then(() => {
+                // Redirect to the landing page after successful logout
+                window.location.href = 'landingpage.html';
+            }).catch((error) => {
+                console.error('Error signing out:', error);
+            });
+        });
 
     </script>
 </body>

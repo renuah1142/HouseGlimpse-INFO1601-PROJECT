@@ -173,7 +173,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
 
-
   <script>
     document.addEventListener("DOMContentLoaded", async function () {
       try {
@@ -229,13 +228,48 @@
       });
     }
 
+    // Initialize Firebase with your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCfh6nG1m77Qn8ROmvT1pvsqbT4EN-Cxm4",
+      authDomain: "houseglimpse.firebaseapp.com",
+      projectId: "houseglimpse",
+      storageBucket: "houseglimpse.appspot.com",
+      messagingSenderId: "270740415363",
+      appId: "1:270740415363:web:ba790aeedcc6c5218fccb6",
+      measurementId: "G-02W6V213L7"
+    };
+    firebase.initializeApp(firebaseConfig);
 
+    // Get a reference to the Firebase Auth service
+    const auth = firebase.auth();
+
+    // Function to log out the user
+    function logout() {
+      auth.signOut().then(() => {
+        // Set session variable to indicate logout
+        sessionStorage.setItem('logout', true);
+        // Redirect to the landing page after logging out
+        window.location.href = 'login.html';
+      }).catch((error) => {
+        console.log(error.message);
+      });
+    }
+
+    // Listen for changes in authentication state
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in
+        // Remove session variable if user is signed in
+        sessionStorage.removeItem('logout');
+      } else {
+        // User is signed out
+        // Redirect to the landing page if the user tries to access other pages
+        if (!window.location.href.endsWith('landingpage.html') && !sessionStorage.getItem('logout')) {
+          window.location.href = 'login.html';
+        }
+      }
+    });
   </script>
-
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 </body>
 
 </html>

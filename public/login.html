@@ -195,6 +195,17 @@
           console.log(error.message);
         });
     });
+
+ // Disable back button functionality
+ history.pushState(null, null, document.URL);
+  window.addEventListener('popstate', function () {
+    history.pushState(null, null, document.URL);
+  });
+
+  // Alternatively, you can add this to prevent default behavior of the back button
+  window.onbeforeunload = function () {
+    return "Do you really want to leave this page?";
+  };
   </script>
 </body>
 

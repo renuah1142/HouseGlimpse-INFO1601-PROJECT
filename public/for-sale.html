@@ -236,6 +236,34 @@
         // Show the carousel
         $('#photoCarousel').modal('show');
       }
+
+
+      // Initialize Firebase with your Firebase config
+      const firebaseConfig = {
+        apiKey: "AIzaSyCfh6nG1m77Qn8ROmvT1pvsqbT4EN-Cxm4",
+        authDomain: "houseglimpse.firebaseapp.com",
+        projectId: "houseglimpse",
+        storageBucket: "houseglimpse.appspot.com",
+        messagingSenderId: "270740415363",
+        appId: "1:270740415363:web:ba790aeedcc6c5218fccb6",
+        measurementId: "G-02W6V213L7"
+      };
+      firebase.initializeApp(firebaseConfig);
+
+      // Get a reference to the Firebase Auth service
+      const auth = firebase.auth();
+
+      // Logout button
+      const logoutBtn = document.getElementById('logoutBtn');
+      logoutBtn.addEventListener('click', () => {
+        // Sign out the current user
+        auth.signOut().then(() => {
+          // Redirect to the landing page after successful logout
+          window.location.href = 'landingpage.html';
+        }).catch((error) => {
+          console.error('Error signing out:', error);
+        });
+      });
     </script>
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

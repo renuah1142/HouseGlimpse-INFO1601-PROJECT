@@ -76,9 +76,13 @@
     </div>
 
     <main class="form-signup">
+        <!-- Inside the <main> tag -->
+        <div id="message" class="text-center mt-5"></div>
         <div class="text-center">
             <img class="logo" src="houselogo.jpeg" alt="" width="100" height="100">
         </div>
+
+
         <div class="text-center">
             <h1>HouseGlimpse</h1>
         </div>
@@ -93,32 +97,33 @@
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="inputFirstName">First Name</label>
-                    <input type="text" class="form-control" id="inputFirstName" placeholder="Enter your first name"
-                        required>
+                    <input type="text" class="form-control" id="inputFirstName" name="firstName"
+                        placeholder="Enter your first name" required>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputLastName">Last Name</label>
-                    <input type="text" class="form-control" id="inputLastName" placeholder="Enter your last name"
-                        required>
+                    <input type="text" class="form-control" id="inputLastName" name="lastName"
+                        placeholder="Enter your last name" required>
                 </div>
             </div>
             <div class="form-group">
                 <label for="inputPhoneNumber">Phone Number</label>
-                <input type="tel" class="form-control" id="inputPhoneNumber" placeholder="Enter your phone number"
-                    required>
+                <input type="tel" class="form-control" id="inputPhoneNumber" name="phoneNumber"
+                    placeholder="Enter your phone number" required>
             </div>
             <div class="form-group">
                 <label for="inputDOB">Date of Birth</label>
-                <input type="date" class="form-control" id="inputDOB" required>
+                <input type="date" class="form-control" id="inputDOB" name="dob" required>
             </div>
             <div class="form-group">
                 <label for="inputEmail">Email address</label>
-                <input type="email" class="form-control" id="inputEmail" placeholder="name@example.com" required>
+                <input type="email" class="form-control" id="inputEmail" name="email" placeholder="name@example.com"
+                    required>
             </div>
             <div class="form-group">
                 <label for="inputPassword">Password</label>
-                <input type="password" class="form-control" id="inputPassword" placeholder="Password" minlength="8"
-                    required>
+                <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password"
+                    minlength="8" required>
             </div>
             <div class="form-group">
                 <label for="inputConfirmPassword">Confirm Password</label>
@@ -141,42 +146,49 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
 
     <script>
-        // the Event object is passed to any event handler called via an event attribute eg onclick, onsubmit etc
-        function submit(event) {
-            event.preventDefault(); // prevents page redirection
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfh6nG1m77Qn8ROmvT1pvsqbT4EN-Cxm4",
+            authDomain: "houseglimpse.firebaseapp.com",
+            projectId: "houseglimpse",
+            storageBucket: "houseglimpse.appspot.com",
+            messagingSenderId: "270740415363",
+            appId: "1:270740415363:web:ba790aeedcc6c5218fccb6",
+            measurementId: "G-02W6V213L7"
+        };
 
-            // event target returns the element on which the event is fired upon ie event.target === myForm
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
 
-            const myForm = event.target;
-            const formData = new FormData(myForm); // get form data
-            const data = Object.fromEntries(formData); // convert form data to object
+        // Function to handle form submission
+        function submitForm(event) {
+            event.preventDefault(); // Prevent form submission
 
-            postData('', data);
+            // Get form data
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
 
+            // Create user with email and password
+            firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
+                .then((userCredential) => {
+                    // Signed in 
+                    var user = userCredential.user;
+                    console.log('User signed up:', user);
+                    // Display success message
+                    document.getElementById('message').innerHTML = 'Account created successfully! You will be redirected to login shortly.';
+                    // Redirect to login page after 3 seconds
+                    setTimeout(function () {
+                        window.location.href = 'login.html';
+                    }, 3000);
+                })
+                .catch((error) => {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    console.error('Error signing up:', errorMessage);
+                });
         }
-
-        // attach the submit function to the submit event of myForm    
-        document.getElementById('Myform').addEventListener('submit', submit);
-
-        async function postData(url, data) {
-            try {
-
-                let response = await fetch(
-                    url,
-                    {
-                        method: 'POST',
-                        body: JSON.stringify(data),//convert data to JSON string
-                        headers: { 'Content-Type': 'application/json' }// JSON data
-                    },
-                );//1. Send http request and get response
-
-                let result = await response.text();//2. Get message from response
-                console.log(result);//3. Do something with the message
-
-            } catch (error) {
-                console.log(error);//catch and log any errors
-            }
-        }
+        // Attach form submission handler
+        document.getElementById('Myform').addEventListener('submit', submitForm);
     </script>
 
 </body>

@@ -21,7 +21,10 @@
   <link href="pages.css" rel="stylesheet">
 
   <style>
-
+    .btn-love {
+      color: red;
+      /* Change color to red when favorited */
+    }
   </style>
 </head>
 
@@ -265,6 +268,96 @@
           console.error('Error signing out:', error);
         });
       });
+
+      let favorites = [];
+
+      document.addEventListener("DOMContentLoaded", async function () {
+        try {
+          // Fetch data from data.json file
+          const response = await fetch('data.json');
+          const data = await response.json();
+
+          // Load favorites from localStorage
+          loadFavorites(data);
+
+          // Call function to display all house cards in alphabetical order
+          displayAllProps(data);
+        } catch (error) {
+          console.error(error);
+        }
+      });
+
+      // Function to toggle favorite status and update UI
+      function toggleFavorite(externalID) {
+        const index = favorites.indexOf(externalID);
+        if (index === -1) {
+          // House is not in favorites, add it
+          favorites.push(externalID);
+        } else {
+          // House is already in favorites, remove it
+          favorites.splice(index, 1);
+        }
+        // Save favorites to localStorage
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        // Update UI
+        updateFavoritesUI();
+      }
+
+      // Function to update UI to reflect favorite status
+      function updateFavoritesUI() {
+        const favoriteButtons = document.querySelectorAll('.btn-love');
+        favoriteButtons.forEach(button => {
+          const externalID = button.dataset.externalid;
+          if (favorites.includes(externalID)) {
+            button.classList.add('text-danger'); // Add filled heart color
+          } else {
+            button.classList.remove('text-danger'); // Remove filled heart color
+          }
+        });
+      }
+
+      // Function to load favorites from localStorage
+      function loadFavorites(data) {
+        const storedFavorites = localStorage.getItem('favorites');
+        if (storedFavorites) {
+          favorites = JSON.parse(storedFavorites);
+          updateFavoritesUI();
+        }
+      }
+
+
+      // Get a reference to Firestore
+      const db = firebase.firestore();
+
+      // Function to toggle favorite status and update Firestore
+      async function toggleFavorite(externalID) {
+        const index = favorites.indexOf(externalID);
+        if (index === -1) {
+          // House is not in favorites, add it
+          favorites.push(externalID);
+          // Add favorite to Firestore
+          await db.collection('favorites').add({
+            userID: firebase.auth().currentUser.uid, // Assuming you are using Firebase Authentication
+            houseID: externalID
+          });
+        } else {
+          // House is already in favorites, remove it
+          favorites.splice(index, 1);
+          // Remove favorite from Firestore
+          const snapshot = await db.collection('favorites')
+            .where('userID', '==', firebase.auth().currentUser.uid) // Query by user ID
+            .where('houseID', '==', externalID) // Query by house ID
+            .get();
+          snapshot.forEach(doc => {
+            doc.ref.delete(); // Delete document from Firestore
+          });
+        }
+        // Save favorites to localStorage
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        // Update UI
+        updateFavoritesUI();
+      }
+
 
     </script>
     <!-- Bootstrap Bundle with Popper -->
