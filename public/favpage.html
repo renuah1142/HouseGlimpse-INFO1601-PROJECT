@@ -32,18 +32,18 @@
             <!-- Sidebar -->
             <div class="col-md-3 sidebar">
                 <div class="logo-wrapper">
-                    <a href="index.html"><img src="houselogo.jpeg" alt="logo" class="sidebar-logo"></a>
-                    <h1 class="sidebar-title"><a href="index.html"
+                    <a href="home.html"><img src="houselogo.jpeg" alt="logo" class="sidebar-logo"></a>
+                    <h1 class="sidebar-title"><a href="home.html"
                             style="color: white; text-decoration: none;">HouseGlimpse</a></h1>
                 </div>
                 <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
                     <li class="nav-item"><a class="link-warning" href="favpage.html">Favorites</a></li>
                     <br>
                     <li class="nav-item">Quick Filters</li>
                     <!-- Filter labels -->
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">All</a>
+                        <a class="nav-link" href="home.html">All</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="for-rent.html">For Rent</a>
@@ -63,7 +63,7 @@
                 </ul>
                 <hr>
                 <ul class="nav flex-column mt-auto">
-                    <li class="nav-item"><a class="nav-link" href="landingpage.html">Log Out</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html">Log Out</a></li>
                 </ul>
             </div>
 
@@ -77,107 +77,182 @@
     </div>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-    <script>
+<<<<<<< HEAD
+=======
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
 
-        document.addEventListener("DOMContentLoaded", async function () {
+>>>>>>> bdaa8dcef00c7943cb54213785efb38555250b0e
+    <script>
+        // Initialize Firebase with your Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfh6nG1m77Qn8ROmvT1pvsqbT4EN-Cxm4",
+            authDomain: "houseglimpse.firebaseapp.com",
+            projectId: "houseglimpse",
+            storageBucket: "houseglimpse.appspot.com",
+            messagingSenderId: "270740415363",
+            appId: "1:270740415363:web:ba790aeedcc6c5218fccb6",
+            measurementId: "G-02W6V213L7"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        // Function to load favorite houses for the logged-in user
+        async function loadFavoriteHouses(userID) {
             try {
+                // Get a reference to the Firestore service
+                const db = firebase.firestore();
+
                 // Fetch data from data.json file
                 const response = await fetch('data.json');
-                const data = await response.json();
+                const allHouses = await response.json();
 
-                // Load favorites from localStorage
-                loadFavorites(data);
+                // Load favorites from Firestore
+                const favoriteHousesSnapshot = await db.collection('favorites').where('userID', '==', userID).get();
+                const favoriteHousesData = favoriteHousesSnapshot.docs.map(doc => doc.data());
 
                 // Display favorite houses on the favorites page
-                displayFavoritesPage(data);
+                if (favoriteHousesData.length > 0) {
+                    displayFavoritesPage(favoriteHousesData, allHouses);
+                } else {
+                    // No favorite houses found for the current user
+                    const favoriteHousesContainer = document.getElementById('favoriteHouses');
+                    favoriteHousesContainer.innerHTML = '<p>No favorite houses found.</p>';
+                }
             } catch (error) {
                 console.error(error);
             }
+        }
+
+        // Listen for changes in the authentication state
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                // User is signed in, get the user ID
+                const userID = user.uid;
+                loadFavoriteHouses(userID);
+            } else {
+                // No user is signed in, display appropriate message or handle the scenario
+                console.log("No user is signed in.");
+                // You can choose to display a message or redirect the user to the login page, etc.
+            }
         });
 
-        // Array to store favorite house IDs
-        let favorites = [];
-
-        // Function to toggle favorite status and update UI
-        function toggleFavorite(externalID) {
-            const index = favorites.indexOf(externalID);
-            if (index === -1) {
-                // House is not in favorites, add it
-                favorites.push(externalID);
-            } else {
-                // House is already in favorites, remove it
-                favorites.splice(index, 1);
-            }
-            // Save favorites to localStorage
-            localStorage.setItem('favorites', JSON.stringify(favorites));
-            // Update UI
-            updateFavoritesUI();
-            // Reload favorites page
-            displayFavoritesPage();
-        }
-
-        // Function to update UI to reflect favorite status
-        function updateFavoritesUI() {
-            const favoriteButtons = document.querySelectorAll('.btn-love');
-            favoriteButtons.forEach(button => {
-                const externalID = button.dataset.externalid;
-                if (favorites.includes(externalID)) {
-                    button.classList.add('text-danger'); // Add filled heart color
-                } else {
-                    button.classList.remove('text-danger'); // Remove filled heart color
-                }
-            });
-        }
-
-        // Function to load favorites from localStorage
-        function loadFavorites(data) {
-            const storedFavorites = localStorage.getItem('favorites');
-            if (storedFavorites) {
-                favorites = JSON.parse(storedFavorites);
-                updateFavoritesUI();
-            }
-        }
-
         // Function to display favorite houses on the favorites page
-        function displayFavoritesPage(data) {
+        async function displayFavoritesPage(favoriteHouses, allHouses) {
             const favoriteHousesContainer = document.getElementById('favoriteHouses');
             favoriteHousesContainer.innerHTML = '';
 
-            // Filter the data to get favorite houses
-            const favoriteHouses = data.filter(house => favorites.includes(house.externalID));
+            try {
+                // Fetch data from data.json file
+                const dataResponse = await fetch('data.json');
+                const data = await dataResponse.json();
 
-            // Display favorite houses
-            favoriteHouses.forEach(house => {
-                // Create HTML for house card
-                const cardHtml = `
-                    <div class="col-md-4 mb-4">
-                        <div class="card">
-                            <img src="${house.coverPhoto.url}" class="card-img-top" alt="House Image">
-                            <div class="card-body">
-                                <h5 class="card-title">${house.title}</h5>
-                                <p class="card-text">
-                                    <div class="justify-content-between align-items-center"> <i class="fas fa-bed"></i>  ${house.rooms}  |   <i class="fas fa-bath"></i> ${house.baths}  | ${house.area.toFixed(2)} Sqft <i class="fas fa-home"></i> | <i class="fas fa-money-bill-wave"></i> USD ${house.price} ${house.rentFrequency ? house.rentFrequency : ''}  | <h6 class="badge rounded-pill text-bg-dark">${house.type}</h6><div>
-                                    <i class="fas fa-map-marker-alt"></i> ${house.location[0].name}, ${house.location[1].name} | Video: ${house.coverVideo ? 'Yes' : 'No'}
-                                </p>
-                            
-                                <div class="d-flex justify-content-between align-items-center"> <h6 class="badge text-bg-secondary text-bg-warning">${house.product}</h6>
-                                    <button class="btn btn-love"><i class="fas fa-heart"></i></button>
-                                    <div>
-                                        <a href="#" class="btn btn-primary btn-sm mb-3" onclick="showHouseDetails('${house.title}', '${house.coverPhoto.url}', '${house.rooms}', '${house.baths}', 
-                                        '${house.type}', '${house.price}', '${house.coverVideo ? house.coverVideo.url : ''}', '${house.location[0].name}', '${house.location[1].name}', '${house.contactName}', '${house.phoneNumber.mobile}', '${house.phoneNumber.phone}', '${house._geoloc.lat}',
-                                        '${house._geoloc.lng}', '${house.area.toFixed(2)}', '${house.agency.name}', '${house.agency.logo.url}', '${house.externalID}', '${house.photoCount}')">Show Details</a>
+                // Iterate through each house in data.json
+                data.hit.forEach(houseInDataJSON => {
+                    // Check if the houseID exists in Firestore favorite houses
+                    const favoriteHouse = favoriteHouses.find(favorite => favorite.houseID === houseInDataJSON.id);
+                    if (favoriteHouse) {
+                        // Find the corresponding house details from allHouses using externalID
+                        const houseDetails = allHouses.find(house => house.id === houseInDataJSON.id);
+                        if (houseDetails) {
+                            // Create HTML for house card
+                            const cardHtml = `
+                                <div class="col-md-4 mb-4">
+                                    <div class="card">
+                                        <img src="${houseDetails.coverPhoto.url}" class="card-img-top" alt="House Image">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${houseDetails.title}</h5>
+                                            <p class="card-text">
+                                                <div class="justify-content-between align-items-center"> 
+                                                    <i class="fas fa-bed"></i>  ${houseDetails.rooms}  |   
+                                                    <i class="fas fa-bath"></i> ${houseDetails.baths}  | 
+                                                    ${houseDetails.area.toFixed(2)} Sqft <i class="fas fa-home"></i> | 
+                                                    <i class="fas fa-money-bill-wave"></i> USD ${houseDetails.price} 
+                                                    ${houseDetails.rentFrequency ? houseDetails.rentFrequency : ''}  | 
+                                                    <h6 class="badge rounded-pill text-bg-dark">${houseDetails.type}</h6>
+                                                </div>
+                                                <i class="fas fa-map-marker-alt"></i> ${houseDetails.location[0].name}, 
+                                                ${houseDetails.location[1].name} | 
+                                                Video: ${houseDetails.coverVideo ? 'Yes' : 'No'}
+                                            </p>
+                                        
+                                            <div class="d-flex justify-content-between align-items-center"> 
+                                                <h6 class="badge text-bg-secondary text-bg-warning">${houseDetails.product}</h6>
+                                                <button class="btn btn-love text-danger" 
+                                                        data-externalid="${houseDetails.id}" 
+                                                        onclick="toggleFavorite('${houseDetails.id}')">
+                                                    <i class="fas fa-heart"></i>
+                                                </button>
+                                                <div>
+                                                    <a href="#" class="btn btn-primary btn-sm mb-3" 
+                                                        onclick="showHouseDetails('${houseDetails.title}', 
+                                                                '${houseDetails.coverPhoto.url}', 
+                                                                '${houseDetails.rooms}', 
+                                                                '${houseDetails.baths}', 
+                                                                '${houseDetails.type}', 
+                                                                '${houseDetails.price}', 
+                                                                '${houseDetails.coverVideo ? houseDetails.coverVideo.url : ''}', 
+                                                                '${houseDetails.location[0].name}', 
+                                                                '${houseDetails.location[1].name}', 
+                                                                '${houseDetails.contactName}', 
+                                                                '${houseDetails.phoneNumber.mobile}', 
+                                                                '${houseDetails.phoneNumber.phone}', 
+                                                                '${houseDetails._geoloc.lat}',
+                                                                '${houseDetails._geoloc.lng}', 
+                                                                '${houseDetails.area.toFixed(2)}', 
+                                                                '${houseDetails.agency.name}', 
+                                                                '${houseDetails.agency.logo.url}', 
+                                                                '${houseDetails.externalID}', 
+                                                                '${houseDetails.photoCount}')">
+                                                        Show Details
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                // Append the card HTML to the container
-                favoriteHousesContainer.innerHTML += cardHtml;
-            });
-        }
+                            `;
+                            // Append the card HTML to the container
+                            favoriteHousesContainer.innerHTML += cardHtml;
+                        }
+                    }
+                });
 
+                // Array to store favorite house IDs
+                let favorites = [];
+
+                // Function to toggle favorite status and update UI
+                function toggleFavorite(externalID) {
+                    const index = favorites.indexOf(externalID);
+                    if (index === -1) {
+                        // House is not in favorites, add it
+                        favorites.push(externalID);
+                    } else {
+                        // House is already in favorites, remove it
+                        favorites.splice(index, 1);
+                    }
+                    // Save favorites to localStorage
+                    localStorage.setItem('favorites', JSON.stringify(favorites));
+                    // Update UI
+                    updateFavoritesUI();
+                }
+
+                // Function to update UI to reflect favorite status
+                function updateFavoritesUI() {
+                    const favoriteButtons = document.querySelectorAll('.btn-love');
+                    favoriteButtons.forEach(button => {
+                        const externalID = button.dataset.externalid;
+                        if (favorites.includes(externalID)) {
+                            button.classList.add('text-danger'); // Add filled heart color
+                        } else {
+                            button.classList.remove('text-danger'); // Remove filled heart color
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
     </script>
+
 </body>
 
 </html>

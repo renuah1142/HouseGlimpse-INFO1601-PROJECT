@@ -74,7 +74,7 @@
   <div>
     <ul class="nav justify-content-end">
       <li class="nav-item">
-        <a class="sing-up" href="landingpage.html"><button type="button" class="btn btn-warning">Home
+        <a class="sing-up" href="index.html"><button type="button" class="btn btn-warning">Home
           </button></a>
       </li>
       <li class="nav-item">
@@ -156,7 +156,11 @@
       auth.signInWithPopup(provider)
         .then((result) => {
           // Redirect to the home page after successful sign-in
+<<<<<<< HEAD
           window.location.href = 'index.html';
+=======
+          window.location.href = 'home.html';
+>>>>>>> bdaa8dcef00c7943cb54213785efb38555250b0e
         })
         .catch((error) => {
           console.log(error.message);
@@ -170,7 +174,11 @@
       auth.signInWithPopup(provider)
         .then((result) => {
           // Redirect to the home page after successful sign-in
+<<<<<<< HEAD
           window.location.href = 'index.html';
+=======
+          window.location.href = 'home.html';
+>>>>>>> bdaa8dcef00c7943cb54213785efb38555250b0e
         })
         .catch((error) => {
           console.log(error.message);
@@ -187,7 +195,11 @@
       auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           // Redirect to the home page after successful sign-in
+<<<<<<< HEAD
           window.location.href = 'index.html';
+=======
+          window.location.href = 'home.html';
+>>>>>>> bdaa8dcef00c7943cb54213785efb38555250b0e
         })
         .catch((error) => {
           // Display error message to the user
@@ -195,6 +207,20 @@
           console.log(error.message);
         });
     });
+<<<<<<< HEAD
+=======
+
+    // Disable back button functionality
+    history.pushState(null, null, document.URL);
+    window.addEventListener('popstate', function () {
+      history.pushState(null, null, document.URL);
+    });
+
+    // Alternatively, you can add this to prevent default behavior of the back button
+    window.onbeforeunload = function () {
+      return "Do you really want to leave this page?";
+    };
+>>>>>>> bdaa8dcef00c7943cb54213785efb38555250b0e
   </script>
 </body>
 

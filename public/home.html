@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="MARKET PLACE APP to view listing of beautiful houses at your fingertips">
   <meta name="author" content="Renuah Samuel, David Williams, and Keishanna Joseph">
-  <title>HouseGlimpse - FOR-SALE</title>
+  <title>HouseGlimpse - HomePage</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
@@ -19,8 +19,12 @@
   <link href="bootstrap.min.css" rel="stylesheet">
   <link href="cover.css" rel="stylesheet">
   <link href="pages.css" rel="stylesheet">
-  <style>
 
+  <style>
+    .btn-love {
+      color: red;
+      /* Change color to red when favorited */
+    }
   </style>
 </head>
 
@@ -28,7 +32,7 @@
   <div class="container-fluid">
     <div class="row">
       <!-- Sidebar -->
-      <div class="col-md-3 sidebar">
+      <div id="menu" class="col-md-3 sidebar">
         <div class="logo-wrapper">
           <a href="home.html"><img src="houselogo.jpeg" alt="logo" class="sidebar-logo"></a>
           <h1 class="sidebar-title"><a href="home.html" style="color: white; text-decoration: none;">HouseGlimpse</a>
@@ -41,13 +45,13 @@
           <li class="nav-item">Quick Filters</li>
           <!-- Filter labels -->
           <li class="nav-item">
-            <a class="nav-link" href="home.html">All</a>
+            <a class="link-warning" href="home.html">All</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="for-rent.html">For Rent</a>
           </li>
           <li class="nav-item">
-            <a class="link-warning" href="for-sale.html">For Sale</a>
+            <a class="nav-link" href="for-sale.html">For Sale</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="Apartments.html">Apartments</a>
@@ -61,12 +65,14 @@
         </ul>
         <hr>
         <ul class="nav flex-column mt-auto">
-          <li class="nav-item"><a class="nav-link" href="index.html">Log Out</a></li>
+          <li class="nav-item">
+            <a id="logoutBtn" class="nav-link" href="#">Log Out</a>
+          </li>
         </ul>
       </div>
 
       <!-- Main Content -->
-      <div class="col-md-9 main-content">
+      <div id="content" class="col-md-9 main-content">
         <div class="row d-flex justify-content-between align-items-center" id="houseCards">
           <!-- House cards will be displayed here -->
         </div>
@@ -112,64 +118,190 @@
       </div>
     </div>
 
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Firebase SDK scripts -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+
     <script>
+      // Initialize Firebase with your Firebase config
+      const firebaseConfig = {
+        apiKey: "AIzaSyCfh6nG1m77Qn8ROmvT1pvsqbT4EN-Cxm4",
+        authDomain: "houseglimpse.firebaseapp.com",
+        projectId: "houseglimpse",
+        storageBucket: "houseglimpse.appspot.com",
+        messagingSenderId: "270740415363",
+        appId: "1:270740415363:web:ba790aeedcc6c5218fccb6",
+        measurementId: "G-02W6V213L7"
+      };
+      firebase.initializeApp(firebaseConfig);
+
+      // Get a reference to Firestore
+      const db = firebase.firestore();
+      // Get a reference to the Firebase Auth service
+      const auth = firebase.auth();
+
+      // Logout button
+      const logoutBtn = document.getElementById('logoutBtn');
+      logoutBtn.addEventListener('click', () => {
+        // Sign out the current user
+        auth.signOut().then(() => {
+          // Redirect to the landing page after successful logout
+          window.location.href = 'index.html';
+        }).catch((error) => {
+          console.error('Error signing out:', error);
+        });
+      });
+
+      let favorites = [];
+
       document.addEventListener("DOMContentLoaded", async function () {
         try {
           // Fetch data from data.json file
           const response = await fetch('data.json');
           const data = await response.json();
 
-          // Call function to display house cards with purpose equal to 'for rent'
-          displayFilteredProps(data, 'for-sale');
+          // Load favorites from localStorage
+          loadFavorites(data);
+
+          // Call function to display all house cards in alphabetical order
+          displayAllProps(data);
         } catch (error) {
           console.error(error);
         }
       });
 
-      function displayFilteredProps(data, filter) {
+      // Function to toggle favorite status and update UI
+      function toggleFavorite(externalID) {
+        const index = favorites.indexOf(externalID);
+        if (index === -1) {
+          // House is not in favorites, add it
+          favorites.push(externalID);
+          // Update Firestore with favorite status
+          updateFirestoreFavorites(firebase.auth().currentUser.uid, externalID);
+        } else {
+          // House is already in favorites, remove it
+          favorites.splice(index, 1);
+          // Update Firestore with favorite status
+          removeFavoriteFromFirestore(firebase.auth().currentUser.uid, externalID);
+        }
+        // Save favorites to localStorage
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        // Update UI
+        updateFavoritesUI();
+      }
+
+      // Function to update UI to reflect favorite status
+      function updateFavoritesUI() {
+        const favoriteButtons = document.querySelectorAll('.btn-love');
+        favoriteButtons.forEach(button => {
+          const externalID = button.dataset.externalid;
+          if (favorites.includes(externalID)) {
+            button.classList.add('text-danger'); // Add filled heart color
+          } else {
+            button.classList.remove('text-danger'); // Remove filled heart color
+          }
+        });
+      }
+
+      // Function to load favorites from localStorage
+      function loadFavorites(data) {
+        const storedFavorites = localStorage.getItem('favorites');
+        if (storedFavorites) {
+          favorites = JSON.parse(storedFavorites);
+          updateFavoritesUI();
+        }
+      }
+
+      // Function to update Firestore with favorite status
+      async function updateFirestoreFavorites(userID, houseID) {
+        try {
+          await db.collection('favorites').add({
+            userID: userID,
+            houseID: houseID
+          });
+          console.log('Favorite added to Firestore.');
+        } catch (error) {
+          console.error('Error adding favorite to Firestore:', error);
+        }
+      }
+
+      // Function to remove favorite from Firestore
+      async function removeFavoriteFromFirestore(userID, houseID) {
+        try {
+          const querySnapshot = await db.collection('favorites')
+            .where('userID', '==', userID)
+            .where('houseID', '==', houseID)
+            .get();
+          querySnapshot.forEach(doc => {
+            doc.ref.delete();
+          });
+          console.log('Favorite removed from Firestore.');
+        } catch (error) {
+          console.error('Error removing favorite from Firestore:', error);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", async function () {
+        try {
+          // Fetch data from data.json file
+          const response = await fetch('data.json');
+          const data = await response.json();
+
+          // Call function to display all house cards in alphabetical order
+          displayAllProps(data);
+        } catch (error) {
+          console.error(error);
+        }
+      });
+
+      function displayAllProps(data) {
         // Get the container for house cards
         const houseCardsContainer = document.getElementById('houseCards');
 
         // Clear existing content
         houseCardsContainer.innerHTML = '';
 
-        // Filter the data based on the filter criteria
-        const filteredData = data.hits.filter(house => house.purpose === filter);
+        // Sort data.hits array alphabetically based on house title
+        data.hits.sort((a, b) => a.title.localeCompare(b.title));
 
-        // Display the filtered house cards
-        filteredData.forEach(house => {
+        // Display all house cards
+        data.hits.forEach(house => {
           // Create HTML for house card
           const cardHtml = `
-                    <div class="col-md-4 mb-4">
-                        <div class="card">
-                            <img src="${house.coverPhoto.url}" class="card-img-top" alt="House Image">
-                            <div class="card-body">
-                                <h5 class="card-title">${house.title}</h5>
-                                <p class="card-text">
-                                    <div class="justify-content-between align-items-center"> <i class="fas fa-bed"></i>  ${house.rooms}  |   <i class="fas fa-bath"></i> ${house.baths}  | ${house.area.toFixed(2)} Sqft <i class="fas fa-home"></i> | <i class="fas fa-money-bill-wave"></i> USD ${house.price} ${house.rentFrequency ? house.rentFrequency : ''}  | <h6 class="badge rounded-pill text-bg-dark">${house.type}</h6><div>
-                                    <i class="fas fa-map-marker-alt"></i> ${house.location[0].name}, ${house.location[1].name} | Video: ${house.coverVideo ? 'Yes' : 'No'}
-                                </p>
-                            
-                                <div class="d-flex justify-content-between align-items-center"> <h6 class="badge text-bg-secondary text-bg-warning">${house.product}</h6>
-                                    <button class="btn btn-love"><i class="fas fa-heart"></i></button>
-                                    <div>
-                                        <a href="#" class="btn btn-primary btn-sm mb-3" onclick="showHouseDetails('${house.title}', '${house.coverPhoto.url}', '${house.rooms}', '${house.baths}', 
-                                        '${house.type}', '${house.price}', '${house.coverVideo ? house.coverVideo.url : ''}', '${house.location[0].name}', '${house.location[1].name}', '${house.contactName}', '${house.phoneNumber.mobile}', '${house.phoneNumber.phone}', '${house._geoloc.lat}',
-                                        '${house._geoloc.lng}', '${house.area.toFixed(2)}', '${house.agency.name}', '${house.agency.logo.url}', '${house.externalID}', '${house.photoCount}')">Show Details</a>
-                                    </div>
-                                </div>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="${house.coverPhoto.url}" class="card-img-top" alt="House Image">
+                    <div class="card-body">
+                        <h5 class="card-title">${house.title}</h5>
+                        <p class="card-text">
+                            <div class="justify-content-between align-items-center"> <i class="fas fa-bed"></i>  ${house.rooms}  |   <i class="fas fa-bath"></i> ${house.baths}  | ${house.area.toFixed(2)} Sqft <i class="fas fa-home"></i> | <i class="fas fa-money-bill-wave"></i> USD ${house.price} ${house.rentFrequency ? house.rentFrequency : ''}  | <h6 class="badge rounded-pill text-bg-dark">${house.type}</h6><div>
+                            <i class="fas fa-map-marker-alt"></i> ${house.location[0].name}, ${house.location[1].name} | Video: ${house.coverVideo ? 'Yes' : 'No'}
+                        </p>
+                    
+                        <div class="d-flex justify-content-between align-items-center"> <h6 class="badge text-bg-secondary text-bg-warning">${house.product}</h6>
+                            <button class="btn btn-love" data-externalid="${house.id}" onclick="toggleFavorite('${house.id}')"><i class="fas fa-heart"></i></button>
+                            <div>
+                                <a href="#" class="btn btn-primary btn-sm mb-3" onclick="showHouseDetails('${house.title}', '${house.coverPhoto.url}', '${house.rooms}', '${house.baths}', 
+                                '${house.type}', '${house.price}', '${house.coverVideo ? house.coverVideo.url : ''}', '${house.location[0].name}', '${house.location[1].name}', '${house.contactName}', '${house.phoneNumber.mobile}', '${house.phoneNumber.phone}', '${house._geoloc.lat}',
+                                '${house._geoloc.lng}', '${house.area.toFixed(2)}', '${house.agency.name}', '${house.agency.logo.url}', '${house.externalID}', '${house.photoCount}')">Show Details</a>
                             </div>
                         </div>
                     </div>
-                `;
+                </div>
+            </div>
+        `;
 
           // Append the card HTML to the container
           houseCardsContainer.innerHTML += cardHtml;
         });
       }
-
 
       function showHouseDetails(title, coverPhotoUrl, rooms, baths, type, price, coverVideoUrl, location1, location2, contactName, phoneNumber1, phoneNumber2, lat, lng, area, agencyName, agencyLogo, externalid, photoCount) {
         // Set modal content    
@@ -237,38 +369,8 @@
         $('#photoCarousel').modal('show');
       }
 
-
-      // Initialize Firebase with your Firebase config
-      const firebaseConfig = {
-        apiKey: "AIzaSyCfh6nG1m77Qn8ROmvT1pvsqbT4EN-Cxm4",
-        authDomain: "houseglimpse.firebaseapp.com",
-        projectId: "houseglimpse",
-        storageBucket: "houseglimpse.appspot.com",
-        messagingSenderId: "270740415363",
-        appId: "1:270740415363:web:ba790aeedcc6c5218fccb6",
-        measurementId: "G-02W6V213L7"
-      };
-      firebase.initializeApp(firebaseConfig);
-
-      // Get a reference to the Firebase Auth service
-      const auth = firebase.auth();
-
-      // Logout button
-      const logoutBtn = document.getElementById('logoutBtn');
-      logoutBtn.addEventListener('click', () => {
-        // Sign out the current user
-        auth.signOut().then(() => {
-          // Redirect to the landing page after successful logout
-          window.location.href = 'index.html';
-        }).catch((error) => {
-          console.error('Error signing out:', error);
-        });
-      });
     </script>
-    <!-- Bootstrap Bundle with Popper -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
 </body>
 
 </html>
