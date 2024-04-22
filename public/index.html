@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="MARKET PLACE APP to view listing of beautiful houses at your fingertips">
   <meta name="author" content="Renuah Samuel, David Williams, and Keishanna Joseph">
+  <link rel="icon" href="houselogo.jpeg" type="image/x-icon">
   <title>HouseGlimpse</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -15,116 +16,155 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+
 
   <link href="bootstrap.min.css" rel="stylesheet">
   <link href="cover.css" rel="stylesheet">
   <link href="pages.css" rel="stylesheet">
   <style>
+    /* Global styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+
     img {
+
       border-radius: 45px;
-    }
-
-    .navbar-logo {
-      margin-left: 10px;
-    }
-
-    .carousel-inner {
-      width: 200%;
-      /* Increase the width of the carousel-inner */
-      margin-left: -50%;
-      /* Center the images */
-      overflow: hidden;
-    }
-
-    .carousel {
-      width: 100%;
-      max-width: 1500px;
-      /* Increase the maximum width */
-      margin: auto;
-      overflow: hidden;
-      position: relative;
-      /* Add position relative */
-    }
-
-    .carousel-item img {
-      width: auto;
-      /* Auto width */
-      height: 600px;
-      /* Increase the height of the images */
-      object-fit: cover;
-      /* Ensure the image covers the entire container */
-    }
-
-    .carousel-item.active {
-      transform: scale(0.9);
-      /* Adjust scale to your preference */
-    }
-
-    .carousel-control-prev,
-    .carousel-control-next {
-      width: auto;
-    }
-
-    .carousel-control-prev-icon,
-    .carousel-control-next-icon {
-      background-color: rgba(0, 0, 0, 0.5);
-      /* Adjust as needed */
-    }
-
-    .carousel-caption {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(0, 0, 0, 0.5);
-      /* Adjust as needed */
-      color: white;
-      width: 100%;
-      padding: 10px;
     }
 
     .masthead {
       background-image: url('keith-misner-h0Vxgz5tyXA-unsplash.jpg');
       background-size: cover;
       background-position: center;
-      position: fixed;
-      top: 0;
-      left: 0;
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .welcome-header {
+      font-family: 'Dancing Script', cursive;
+      font-size: 150px;
+      margin-bottom: 30px;
+    }
+
+    /* Navbar styles */
+    .navbar {
+      background-color: #343a40;
+    }
+
+    .navbar-brand,
+    .navbar-toggler-icon {
+      color: #ffc107 !important;
+    }
+
+    .navbar-brand:hover {
+      color: #ffd166 !important;
+    }
+
+    .nav-link {
+      color: #fff !important;
+    }
+
+    .nav-link:hover {
+      color: #ffc107 !important;
+    }
+
+    /* Carousel styles */
+    .carousel-inner {
+      background-image: url('keith-misner-h0Vxgz5tyXA-unsplash.jpg');
+      background-size: cover;
+      background-position: center;
       width: 100%;
-      height: 100%;
     }
 
-
-    ::-webkit-scrollbar {
-      display: none;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
+    .carousel-item img {
+      max-height: 900px;
+      max-width: 900px;
+      /* Adjust the max-height as needed */
+      margin: auto;
+      transition: padding 0.3s ease;
     }
 
-    .sign {
-      background-size: 100%;
-      color: gold;
+    /* About section styles */
+    .about-section {
+      background-color: #fff;
+      padding: 80px 0;
+    }
+
+    .about-section h2 {
+      color: #343a40;
+      font-size: 36px;
+      margin-bottom: 40px;
+    }
+
+    .about-section p {
+      color: #6c757d;
+      font-size: 18px;
+    }
+
+    /* Features section styles */
+    .features-section {
+      background-color: #f8f9fa;
+      padding: 80px 0;
+    }
+
+    .features-section h2 {
+      color: #343a40;
+      font-size: 36px;
+      margin-bottom: 40px;
+    }
+
+    .feature-card {
+      border: 1px solid #ced4da;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-card h4 {
+      color: #343a40;
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+
+    .feature-card p {
+      color: #6c757d;
+      font-size: 16px;
     }
   </style>
 </head>
 
-<body class="masthead">
-  <nav class="navbar navbar-expand-lg py-3 bg-gainsboro">
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-      <div class="position-absolute top-0 start-50 translate-middle-x">
-        <a class="navbar-logo" href="index.html"><img src="houselogo.jpeg" alt="logoicon" width="60" height="60"></a>
-        <a class="navbar-brand" href="index.html">
-          <div class="logo">
-            <h1 style="background-color: rgb(92, 92, 92);" class="btn btn-warning btn-lg">HouseGlimpse</h1>
-          </div>
-        </a>
-      </div>
+      <a class="navbar-brand" href="index.html">
+        <img src="houselogo.jpeg" alt="logoicon" width="40" height="40"> HouseGlimpse
+      </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
+        <ul class="navbar-nav ml-auto">
+
+          <li class="nav-item">
+            <a class="nav-link" href="#" onclick="scrollToSection('feature')">Key Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" onclick="scrollToSection('aboutus')">About Us</a>
+          </li>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
           <li class="nav-item">
             <a class="login-logo" href="login.html"><button type="button" class="btn btn-warning ">Log
                 In</button></a>
@@ -139,32 +179,94 @@
     </div>
   </nav>
 
+  <header class="masthead">
+    <h1 class="welcome-header" style="color: black; text-shadow: 1px 1px 2px #ffffff;">Welcome to HouseGlimpse</h1>
+  </header>
+
   <main>
-    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-
-      <!-- Added data-bs-interval -->
-      <!-- Indicators -->
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
       <ol class="carousel-indicators">
-        <!-- Add indicators dynamically -->
+        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
       </ol>
-
-      <!-- Slides -->
       <div class="carousel-inner">
-        <!-- Slide items will be added dynamically -->
+        <div class="carousel-item active">
+          <img
+            src="https://bayut-production.s3.eu-central-1.amazonaws.com/image/664360431/969d6d42a9d44a1b93a4d1906e080876"
+            class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img
+            src="https://bayut-production.s3.eu-central-1.amazonaws.com/image/662822635/004d815d91f04068992b3dac62d1f842"
+            class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img
+            src="https://bayut-production.s3.eu-central-1.amazonaws.com/image/662272396/0783740cc30749d1ad5d8c034fe89c30"
+            class="d-block w-100" alt="...">
+        </div>
       </div>
-
-      <!-- Controls -->
-      <a class="carousel-control-prev" href="#carouselExampleInterval" role="button" data-bs-slide="prev">
+      <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
+        <span class="sr-only">Previous</span>
       </a>
-      <a class="carousel-control-next" href="#carouselExampleInterval" role="button" data-bs-slide="next">
+      <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
+        <span class="sr-only">Next</span>
       </a>
     </div>
 
+    <div class="about-section" id="aboutus">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <h2>About HouseGlimpse</h2>
+            <p>HouseGlimpse is your ultimate destination for exploring beautiful houses around the world. Whether
+              you're searching for your dream home or looking for inspiration, HouseGlimpse has got you covered. Our
+              curated listings showcase the finest properties with stunning photos and detailed information, making it
+              easy for you to find your perfect match.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="features-section" id="feature">
+      <div class="container">
+        <h2>Key Features</h2>
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="feature-card">
+              <h4>Advanced Search Filters</h4>
+              <p>Easily filter properties by location, price range, number of rooms, and more to find the perfect match
+                for your needs.</p>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="feature-card">
+              <h4>Interactive Maps</h4>
+              <p>Explore properties using interactive maps, allowing you to visualize their location and nearby
+                amenities.</p>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="feature-card">
+              <h4>Save Favorites</h4>
+              <p>Create an account to save your favorite listings and receive alerts when new properties matching your
+                criteria become available.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
+
+  <footer class="py-4 bg-dark text-white">
+    <div class="container text-center">
+      <p>&copy; 2024 HouseGlimpse. All rights reserved.</p>
+    </div>
+  </footer>
+
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
@@ -173,22 +275,43 @@
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
 
   <script>
+
+    function scrollToSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+
     document.addEventListener("DOMContentLoaded", async function () {
       try {
         // Fetch data from data.json file
         const response = await fetch('data.json');
         const data = await response.json();
 
-        // Call function to display house cards with purpose equal to 'superhot'
-        displayFilteredProps(data, 'superhot');
+        // Call function to display house cards with purpose equal to 'premium'
+        displayFilteredProps(data, 'premium');
+
+        // Wait for the carouselExampleInterval element to be available
+        const waitForCarousel = setInterval(() => {
+          const carousel = document.getElementById('carouselExampleInterval');
+          if (carousel) {
+            clearInterval(waitForCarousel);
+            // Initialize the carousel once the element is available
+            var myCarousel = new bootstrap.Carousel(carousel, {
+              keyboard: false, // Disable keyboard navigation
+              wrap: false // Disable wrap-around
+            });
+          }
+        }, 100);
+
       } catch (error) {
         console.error(error);
       }
     });
 
+
     function displayFilteredProps(data, filter) {
-      const houseCardsContainer = document.querySelector('carousel-inner');
-      const indicatorsContainer = document.querySelector('carousel-indicators');
+      const houseCardsContainer = document.querySelector('.carousel-inner');
+      const indicatorsContainer = document.querySelector('.carousel-indicators');
 
       // Clear existing content
       houseCardsContainer.innerHTML = '';
@@ -202,14 +325,14 @@
         // Create HTML for house card
         const isActive = index === 0 ? 'active' : '';
         const cardHtml = `
-            <div class="carousel-item ${isActive}">
-                <img src="${house.coverPhoto.url}" class="d-block w-100" alt="House Image">
-                <div class="carousel-caption d-md-block">
-                    <h5>${house.title}</h5>
-                    <p>Details: ${house.rooms} Rooms | ${house.baths} Baths | ${house.area.toFixed(2)} Sqft</p>
-                </div>
-            </div>
-        `;
+        <div class="carousel-item ${isActive}">
+          <img src="${house.coverPhoto.url}" class="d-block w-100" alt="House Image">
+          <div class="carousel-caption d-md-block">
+            <h5>${house.title}</h5>
+            <p>Details: ${house.rooms} Rooms | ${house.baths} Baths | ${house.area.toFixed(2)} Sqft</p>
+          </div>
+        </div>
+      `;
 
         // Append the card HTML to the container
         houseCardsContainer.innerHTML += cardHtml;
@@ -227,6 +350,7 @@
       });
     }
 
+
     // Initialize Firebase with your Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyCfh6nG1m77Qn8ROmvT1pvsqbT4EN-Cxm4",
@@ -242,17 +366,6 @@
     // Get a reference to the Firebase Auth service
     const auth = firebase.auth();
 
-    // Function to log out the user
-    function logout() {
-      auth.signOut().then(() => {
-        // Set session variable to indicate logout
-        sessionStorage.setItem('logout', true);
-        // Redirect to the landing page after logging out
-        window.location.href = 'login.html';
-      }).catch((error) => {
-        console.log(error.message);
-      });
-    }
 
     // Listen for changes in authentication state
     auth.onAuthStateChanged((user) => {
@@ -263,11 +376,23 @@
       } else {
         // User is signed out
         // Redirect to the landing page if the user tries to access other pages
-        if (!window.location.href.endsWith('landingpage.html') && !sessionStorage.getItem('logout')) {
+        if (!window.location.href.endsWith('index.html') && !sessionStorage.getItem('logout')) {
           window.location.href = 'login.html';
         }
       }
     });
+
+    // Disable back button functionality
+    history.pushState(null, null, document.URL);
+    window.addEventListener('popstate', function () {
+      history.pushState(null, null, document.URL);
+      window.location.href = 'index.html'; // Redirect to index.html
+    });
+
+    // Alternatively, you can add this to prevent default behavior of the back button
+    window.onbeforeunload = function () {
+      return "Do you really want to leave this page?";
+    };
   </script>
 </body>
 
