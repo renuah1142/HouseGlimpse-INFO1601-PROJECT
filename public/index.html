@@ -136,19 +136,6 @@
                 Up</button></a>
           </li>
         </ul>
-        <hr>
-        <ul class="nav flex-column mt-auto">
-          <li class="nav-item">
-            <a id="logoutBtn" class="nav-link" href="#">Log Out</a>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Main Content -->
-      <div id="content" class="col-md-9 main-content">
-        <div class="row d-flex justify-content-between align-items-center" id="houseCards">
-          <!-- House cards will be displayed here -->
-        </div>
       </div>
     </div>
   </nav>
@@ -178,15 +165,7 @@
       </a>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", async function () {
-        try {
-          // Fetch data from data.json file
-          const response = await fetch('data.json');
-          const data = await response.json();
+  </main>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
@@ -289,59 +268,8 @@
           window.location.href = 'login.html';
         }
       }
-
-      function displayPhotoCarousel(photoURLs) {
-        // Get the carousel element
-        const carouselInner = document.getElementById('carouselInner');
-
-        // Clear existing carousel content
-        carouselInner.innerHTML = '';
-
-        // Create carousel items for each photo URL
-        photoURLs.forEach((url, index) => {
-          const activeClass = index === 0 ? 'active' : ''; // Add active class to first item
-          const carouselItem = `<div class="carousel-item ${activeClass}">
-                                    <img src="${url}" class="d-block w-100" alt="House Photo">
-                                    </div>`;
-          carouselInner.innerHTML += carouselItem;
-          console.log(carouselItem);
-        });
-        // Show the carousel
-        $('#photoCarousel').modal('show');
-      }
-      // Initialize Firebase with your Firebase config
-      const firebaseConfig = {
-        apiKey: "AIzaSyCfh6nG1m77Qn8ROmvT1pvsqbT4EN-Cxm4",
-        authDomain: "houseglimpse.firebaseapp.com",
-        projectId: "houseglimpse",
-        storageBucket: "houseglimpse.appspot.com",
-        messagingSenderId: "270740415363",
-        appId: "1:270740415363:web:ba790aeedcc6c5218fccb6",
-        measurementId: "G-02W6V213L7"
-      };
-      firebase.initializeApp(firebaseConfig);
-
-      // Get a reference to the Firebase Auth service
-      const auth = firebase.auth();
-
-      // Logout button
-      const logoutBtn = document.getElementById('logoutBtn');
-      logoutBtn.addEventListener('click', () => {
-        // Sign out the current user
-        auth.signOut().then(() => {
-          // Redirect to the landing page after successful logout
-          window.location.href = 'landingpage.html';
-        }).catch((error) => {
-          console.error('Error signing out:', error);
-        });
-      });
-
-    </script>
-    <!-- Bootstrap Bundle with Popper -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
+    });
+  </script>
 </body>
 
 </html>
