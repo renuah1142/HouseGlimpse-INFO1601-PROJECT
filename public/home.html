@@ -178,6 +178,9 @@
         }
       });
 
+
+      //for other pages---------------------------->
+
       // Function to toggle favorite status and update UI
       function toggleFavorite(externalID) {
         const index = favorites.indexOf(externalID);
@@ -248,6 +251,9 @@
           console.error('Error removing favorite from Firestore:', error);
         }
       }
+
+
+      //end------------------------->
 
       document.addEventListener("DOMContentLoaded", async function () {
         try {

@@ -120,6 +120,36 @@
             }
         }
 
+        
+
+        // Function to remove favorite from Firestore
+      async function removeFavoriteFromFirestore(userID, houseID) {
+        try {
+          const querySnapshot = await db.collection('favorites')
+            .where('userID', '==', userID)
+            .where('houseID', '==', houseID)
+            .get();
+          querySnapshot.forEach(doc => {
+            doc.ref.delete();
+          });
+          console.log('Favorite removed from Firestore.');
+        } catch (error) {
+          console.error('Error removing favorite from Firestore:', error);
+        }
+      }
+
+      async function updateFirestoreFavorites(userID, houseID) {
+        try {
+          await db.collection('favorites').add({
+            userID: userID,
+            houseID: houseID
+          });
+          console.log('Favorite added to Firestore.');
+        } catch (error) {
+          console.error('Error adding favorite to Firestore:', error);
+        }
+      }
+
         // Listen for changes in the authentication state
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
@@ -250,6 +280,76 @@
             }
         }
 
+
+
+        //to display housecards functions -------------------->
+
+        function showHouseDetails(title, coverPhotoUrl, rooms, baths, type, price, coverVideoUrl, location1, location2, contactName, phoneNumber1, phoneNumber2, lat, lng, area, agencyName, agencyLogo, externalid, photoCount) {
+        // Set modal content    
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalCoverPhoto').src = coverPhotoUrl;
+        document.getElementById('modalDetails').innerHTML = `<p><i class="fas fa-bed"></i> ${rooms} | <i class="fas fa-bath"></i> ${baths} | ${area} sqft <i class="fas fa-home"></i> | <i class="fas fa-money-bill-wave"></i> USD$${price} <i class="fas fa-map-marker-alt"></i> ${location1}, ${location2} </p>
+            <strong>Seller Contact Details:</strong><br>Contact Name: ${contactName}<br>Phone Number: <a href="tel:${phoneNumber2}">${phoneNumber2}</a><br>Mobile: <a href="tel:${phoneNumber1}">${phoneNumber1}</a><br>Agency Name: ${agencyName}<br> <img src="${agencyLogo}" class="img-fluid" alt="Agency Logo">
+            <br><div class="d-flex justify-content-between"><a id="GoogleMaps" href="https://www.google.com/maps?q=${lat},${lng}" class="btn btn-dark mt-4 "><i class="fas fa-map-marker-alt"></i> Google Maps</a><a id="ShowPhotos" onclick="fetchHousePhotos(${externalid})" href="#" class="btn btn-dark mt-4 "><i class="fas fa-photo-video"></i> Show More Photos</a>
+            ${coverVideoUrl ? `<a id="videoLink" href="${coverVideoUrl}" class="btn btn-dark mt-4">House Video Link</a></div>` : ''}`;
+        // Show modal
+        $('#houseModal').modal('show');
+      }
+
+
+      async function fetchHousePhotos(externalID) {
+        const url = `https://bayut.p.rapidapi.com/properties/detail?externalID=${externalID}`;
+        const options = {
+          method: 'GET',
+          headers: {
+            'X-RapidAPI-Key': '52ebbaef52msh3f25e7cc55478d2p12612djsn299ea60b3a8c',
+            'X-RapidAPI-Host': 'bayut.p.rapidapi.com'
+          }
+        };
+
+        try {
+          const response = await fetch(url, options);
+          const result = await response.json();
+
+          // Check if photos are available
+          if (result.photos && result.photos.length > 0) {
+            // Extract photo URLs
+            const photoURLs = result.photos.map(photo => photo.url);
+
+            // Display photos in a carousel
+            displayPhotoCarousel(photoURLs);
+
+            return photoURLs;
+          } else {
+            console.log('No photos found for the house.');
+            return [];
+          }
+        } catch (error) {
+          console.error('Error fetching house photos:', error);
+          return [];
+        }
+      }
+
+      function displayPhotoCarousel(photoURLs) {
+        // Get the carousel element
+        const carouselInner = document.getElementById('carouselInner');
+
+        // Clear existing carousel content
+        carouselInner.innerHTML = '';
+
+        // Create carousel items for each photo URL
+        photoURLs.forEach((url, index) => {
+          const activeClass = index === 0 ? 'active' : ''; // Add active class to first item
+          const carouselItem = `<div class="carousel-item ${activeClass}">
+                                    <img src="${url}" class="d-block w-100" alt="House Photo">
+                                    </div>`;
+          carouselInner.innerHTML += carouselItem;
+          console.log(carouselItem);
+        });
+        // Show the carousel
+        $('#photoCarousel').modal('show');
+      }
+//----------------end----------------->
 
         // Function to handle authentication state change
         function handleAuthStateChange() {
