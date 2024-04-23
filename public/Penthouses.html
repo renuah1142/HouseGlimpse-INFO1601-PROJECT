@@ -267,6 +267,21 @@
                     console.error('Error signing out:', error);
                 });
             });
+
+            // Function to handle authentication state change
+            function handleAuthStateChange() {
+                firebase.auth().onAuthStateChanged(user => {
+                    if (user) {
+                        // User is signed in, do nothing
+                    } else {
+                        // User is not signed in, redirect to index.html
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+
+            // Call the function to handle authentication state change
+            handleAuthStateChange();
         </script>
         <!-- Bootstrap Bundle with Popper -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

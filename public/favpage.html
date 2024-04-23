@@ -249,6 +249,22 @@
                 console.error(error);
             }
         }
+
+
+        // Function to handle authentication state change
+        function handleAuthStateChange() {
+            firebase.auth().onAuthStateChanged(user => {
+                if (user) {
+                    // User is signed in, do nothing
+                } else {
+                    // User is not signed in, redirect to index.html
+                    window.location.href = 'index.html';
+                }
+            });
+        }
+
+        // Call the function to handle authentication state change
+        handleAuthStateChange();
     </script>
 
 </body>

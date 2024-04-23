@@ -367,29 +367,6 @@
     const auth = firebase.auth();
 
 
-    // Listen for changes in authentication state
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        // User is signed in
-        // Remove session variable if user is signed in
-        sessionStorage.removeItem('logout');
-      } else {
-        // User is signed out
-        // Redirect to the landing page if the user tries to access other pages
-        if (!window.location.href.endsWith('index.html') && !sessionStorage.getItem('logout')) {
-          window.location.href = 'login.html';
-        }
-      }
-    });
-
-    // Disable back button functionality
-    history.pushState(null, null, document.URL);
-    window.addEventListener('popstate', function () {
-      history.pushState(null, null, document.URL);
-      window.location.href = 'index.html'; // Redirect to index.html
-    });
-
-
   </script>
 </body>
 
